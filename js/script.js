@@ -1,3 +1,12 @@
+let playerScore = 0;
+let cpuScore = 0;
+const buttons = Array.from(document.querySelectorAll("button"));
+
+document.querySelector('#score').textContent = playerScore.toString() + " - " + cpuScore.toString();
+buttons.forEach(btn => btn.addEventListener('click', game));
+
+
+
 function GetComputerChoice() {
     
    let option =  Math.floor(Math.random() * 3)
@@ -13,23 +22,23 @@ function GetComputerChoice() {
     case 2:
         return "scissors";
 
-    default:
-        return "";
-
    }
 
 
 }
 
+function playerOption(e){
 
+    if(e.target.id === 'btnRock')
+        return 'rock';
+    else if(e.target.id === 'btnPaper')
+        return 'paper';
+    else if(e.target.id === 'btnScissors')
+        return 'scissors'
+}   
 
 function round(cpuChoice, playerChoice) 
 {
-
-    playerChoice = playerChoice.toLowerCase();
-
-    if(playerChoice != "rock" && playerChoice != "paper" && playerChoice != "scissors")
-        return "You Lose! Invalid input!"
 
     if (cpuChoice == playerChoice) 
     {
@@ -38,15 +47,15 @@ function round(cpuChoice, playerChoice)
     }
     else if(cpuChoice == "rock" && playerChoice == "scissors")
     {
-        return "You Lose! Rock beats Scissors";
+        return "You lose! Rock beats Scissors";
     }
     else if(cpuChoice == "scissors" && playerChoice == "paper")
     {
-        return "You Lose! Scissors beats Paper";
+        return "You lose! Scissors beats Paper";
     }
     else if(cpuChoice == "paper" && playerChoice == "rock")
     {
-        return "You Lose! Paper beats Rock"
+        return "You lose! Paper beats Rock"
     }
     else
     {
@@ -56,43 +65,44 @@ function round(cpuChoice, playerChoice)
 
 }
 
-function game(){
 
-    let playerScore = 0;
-    let cpuScore = 0;
+function game(e){
+
     let playerSelection;
     let cpuChoice;
     let result;
 
+    playerSelection = playerOption(e);
+    // playerSelection = prompt()
+    cpuChoice = GetComputerChoice();
 
-    while(playerScore < 3 || cpuScore < 3)
+    result = round(cpuChoice, playerSelection);
+    document.querySelector('#result').textContent = result;
+
+    if(result.includes("You win!"))
+        playerScore++;
+    else if(result.includes("You lose"))
+        cpuScore++;
+
+    document.querySelector('#score').textContent = playerScore.toString() + ' - ' + cpuScore.toString();
+
+    if(playerScore >=5)
     {
-
-        if(playerScore >=3){
-            console.log("You won!");
-            break;
-        }
-        else if(cpuScore >= 3)
-        {
-            console.log("You lost!");
-            break;
-        }
         
-        console.log("Pick an option!\n");
+        document.querySelector('#score').textContent = "You won!";
+        document.querySelector('#result').textContent = "Click on any button to play again!"
+        playerScore = 0;
+        cpuScore = 0;
 
-        playerSelection = prompt()
-        cpuChoice = GetComputerChoice()
-
-        result = round(cpuChoice, playerSelection)
-        console.log(result)
-
-        if(result.includes("You Win"))
-            playerScore++;
-        else if(result.includes("You Lose"))
-            cpuScore++
+    }
+    else if(cpuScore >= 5)
+    {
+        document.querySelector('#score').textContent = "You lost!";
+        document.querySelector('#result').textContent = "Click on any button to play again!"
+        playerScore = 0;
+        cpuScore = 0;
     }
 
 }
 
-game()
 
